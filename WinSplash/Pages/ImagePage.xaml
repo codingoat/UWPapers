@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="WinSplash.Pages.ImagePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinSplash.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <FlipView
+            x:Name="flipView" 
+            ItemsSource="{Binding}"
+            Loaded="flipView_Loaded"
+            Margin="-24, -88, -24, -24">
+            <FlipView.Background>
+                <AcrylicBrush BackgroundSource="HostBackdrop" TintColor="#99000000" TintOpacity="1" />
+            </FlipView.Background>
+        </FlipView>
+
+        <CommandBar 
+            DefaultLabelPosition="Right"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Canvas.ZIndex="101"
+            Height="40"
+            Width="301"
+            Margin="0,0,-24,-24"
+            OverflowButtonVisibility="Collapsed">
+            <CommandBar.Background>
+                <AcrylicBrush TintColor="#66FFFFFF"/>
+            </CommandBar.Background>
+            <AppBarButton Icon="Link" Label="Copy link" Click="CopyUrl"/>
+            <AppBarButton Icon="Copy" Label="Copy image" Click="CopyImage"/>
+            <AppBarButton Icon="Save" Label="Save" Click="SaveImage"/>
+        </CommandBar>
+    </Grid>
+</Page>

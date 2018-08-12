@@ -1,0 +1,59 @@
+﻿<Page
+    x:Class="WinSplash.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinSplash.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel>
+        <TextBlock Text="Resolution"
+            Style="{StaticResource SubheaderTextBlockStyle}"
+            Margin="0,0,0,16"
+            />
+        <ComboBox 
+            ItemsSource="{x:Bind resList}" 
+            x:Name="resBox"
+            Width="auto"
+            Height="40"
+            Grid.Column="1"
+            SelectedIndex="0"
+            SelectionChanged="ResChanged"/>
+
+        <TextBlock Text="Color Theme"
+            Style="{StaticResource SubheaderTextBlockStyle}"
+            Margin="0,32,0,16"/>
+
+        <StackPanel Orientation="Horizontal">
+            <RadioButton x:Name="radioLight" Content="Light" Tag="light" Checked="RadioButton_Checked"/>
+            <RadioButton x:Name="radioDark" Content="Dark" Tag="dark" Checked="RadioButton_Checked"/>
+        </StackPanel>
+
+        <TextBlock Text="Created by Zsombor Szabó"
+            Style="{StaticResource SubheaderTextBlockStyle}"
+            Margin="0,32,0,16"/>
+        <StackPanel
+            Orientation="Horizontal"
+            Margin="0,0,0,16">
+            <HyperlinkButton 
+                NavigateUri="https://github.com/codingoat"
+                Height="64"
+                Margin="0,0,16,0">
+                <Image Source="ms-appx:///Assets/github.png"
+                       x:Name="githubImage"/>
+            </HyperlinkButton>
+            <HyperlinkButton 
+                NavigateUri="https://unsplash.com/@codingoat"
+                Height="64">
+                <Image Source="ms-appx:///Assets/unsplash.png"
+                       x:Name="unsplashImage"/>
+            </HyperlinkButton>
+        </StackPanel>
+
+        <TextBlock Style="{StaticResource BodyTextBlockStyle}">
+            <Span xml:space="preserve">Powered by <Hyperlink NavigateUri="https://unsplash.com">Unsplash</Hyperlink>.</Span>
+        </TextBlock>
+    </StackPanel>
+</Page>

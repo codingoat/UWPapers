@@ -1,0 +1,153 @@
+﻿<Page
+    x:Class="WinSplash.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinSplash"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:w10version1803="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 6)">
+    <Page.Resources>
+        <Style x:Key="NavigationViewStyle1" TargetType="NavigationView">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="NavigationView">
+                        <Grid x:Name="RootGrid">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="DisplayModeGroup">
+                                    <VisualState x:Name="Compact">
+                                        <VisualState.Setters>
+                                            <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource NavigationViewExpandedPaneBackground}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Minimal">
+                                        <VisualState.Setters>
+                                            <Setter Target="HeaderContent.Margin" Value="48,5,0,0"/>
+                                            <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource NavigationViewExpandedPaneBackground}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="MinimalWithBackButton">
+                                        <VisualState.Setters>
+                                            <Setter Target="HeaderContent.Margin" Value="104,0,0,0"/>
+                                            <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource NavigationViewExpandedPaneBackground}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="PaneStateListSizeGroup">
+                                    <VisualState x:Name="ListSizeFull"/>
+                                    <VisualState x:Name="ListSizeCompact">
+                                        <VisualState.Setters>
+                                            <Setter Target="MenuItemsHost.HorizontalAlignment" Value="Left"/>
+                                            <Setter Target="MenuItemsHost.Width" Value="{Binding CompactPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                            <Setter Target="PaneTitleTextBlock.Visibility" Value="Collapsed"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid x:Name="PaneToggleButtonGrid" HorizontalAlignment="Left" Margin="0,0,0,8" VerticalAlignment="Top" Canvas.ZIndex="100">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="16"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid x:Name="TogglePaneTopPadding"/>
+                                <Grid x:Name="ButtonHolderGrid" Grid.Row="1">
+                                    <Button x:Name="NavigationViewBackButton" IsEnabled="{TemplateBinding IsBackEnabled}" Style="{StaticResource NavigationBackButtonNormalStyle}" VerticalAlignment="Top"/>
+                                    <Button x:Name="TogglePaneButton" Width="48" AutomationProperties.LandmarkType="Navigation" Style="{TemplateBinding PaneToggleButtonStyle}" VerticalAlignment="Top" />
+                                </Grid>
+                            </Grid>
+                            <SplitView x:Name="RootSplitView" Background="{TemplateBinding Background}" CompactPaneLength="{TemplateBinding CompactPaneLength}" DisplayMode="Inline" IsTabStop="False" IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" OpenPaneLength="{TemplateBinding OpenPaneLength}">
+                                <SplitView.Pane>
+                                    <Grid x:Name="PaneContentGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20"/>
+                                            <RowDefinition Height="0"/>
+                                            <RowDefinition x:Name="PaneContentGridToggleButtonRow" Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="8"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="8"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid x:Name="ContentPaneTopPadding" Height="0"/>
+                                        <Grid Height="{StaticResource PaneToggleButtonHeight}" Grid.Row="2">
+                                            <TextBlock x:Name="PaneTitleTextBlock" HorizontalAlignment="Left" Style="{StaticResource NavigationViewItemHeaderTextStyle}" Text="{TemplateBinding PaneTitle}" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <NavigationViewList x:Name="MenuItemsHost" HorizontalAlignment="Stretch" ItemContainerStyleSelector="{TemplateBinding MenuItemContainerStyleSelector}" ItemContainerStyle="{TemplateBinding MenuItemContainerStyle}" ItemTemplate="{TemplateBinding MenuItemTemplate}" IsItemClickEnabled="True" ItemsSource="{TemplateBinding MenuItemsSource}" ItemTemplateSelector="{TemplateBinding MenuItemTemplateSelector}" Margin="0,0,0,20" Grid.Row="5" SelectionMode="Single" SelectedItem="{TemplateBinding SelectedItem}"/>
+                                        <Border x:Name="FooterContentBorder" Child="{TemplateBinding PaneFooter}" Grid.Row="6"/>
+                                        <NavigationViewItem x:Name="SettingsNavPaneItem" Grid.Row="7">
+                                            <NavigationViewItem.Icon>
+                                                <SymbolIcon Symbol="Setting"/>
+                                            </NavigationViewItem.Icon>
+                                        </NavigationViewItem>
+                                    </Grid>
+                                </SplitView.Pane>
+                                <Grid x:Name="ContentGrid">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <ContentControl x:Name="HeaderContent" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" HorizontalContentAlignment="Stretch" IsTabStop="False" MinHeight="{StaticResource PaneToggleButtonHeight}" Style="{StaticResource NavigationViewTitleHeaderContentControlTextStyle}" VerticalContentAlignment="Stretch"/>
+                                    <ContentPresenter Content="{TemplateBinding Content}" Grid.Row="1"/>
+                                </Grid>
+                            </SplitView>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <NavigationView Style="{StaticResource NavigationViewStyle1}" x:Name="NavView"
+                    ItemInvoked="NavView_ItemInvoked"
+                    IsSettingsVisible="True"
+                    Loaded="NavView_Loaded"
+                    Header="Hello there!"
+                    CompactModeThresholdWidth="1000" 
+                    ExpandedModeThresholdWidth="5000"
+                    AlwaysShowHeader="True"
+                    w10version1803:BackRequested="NavView_BackRequested">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Icon="Find" Content="Browse" x:Name="search" Tag="search"/>
+                <NavigationViewItem Icon="Save" Content="Wallpaper" x:Name="wallpaper" Tag="wallpaper"/>
+            </NavigationView.MenuItems>
+
+            <NavigationView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid x:Name="HeaderBar"
+                        Margin="12,10,0,0" VerticalAlignment="Center">
+                        <!-- <TextBox                            
+                           Grid.Column="1"
+                           FontSize="20"
+                            
+                           x:Name="SearchBox" PlaceholderText="Search Unsplash..." VerticalAlignment="Bottom"/>
+                        <CommandBar Grid.Column="2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            DefaultLabelPosition="Right"
+                                    Height="40">
+                            <AppBarButton Label="Refresh" Icon="Refresh"/>
+                        </CommandBar> -->
+                        <TextBlock x:Name="appTitle" Style="{StaticResource TitleTextBlockStyle}"
+                        FontSize="28"
+                        VerticalAlignment="Center"
+                        Text="{Binding}"/>
+                    </Grid>
+                </DataTemplate>
+            </NavigationView.HeaderTemplate>
+
+            <Frame x:Name="ContentFrame" Margin="24"/>
+        </NavigationView>
+
+        <Grid
+            x:Name="TopBar"
+            Height="32"
+            Margin="48,0,0,0"
+            VerticalAlignment="Top"
+            Canvas.ZIndex="95" 
+            Background="#00000000">
+        </Grid>
+    </Grid>
+</Page>
