@@ -24,19 +24,19 @@ namespace WinSplash
     /// </summary>
     sealed partial class App : Application
     {
+        Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
-            Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            
             if ((string)roamingSettings.Values["theme"] == "dark")
                 RequestedTheme = ApplicationTheme.Dark;
-            else if ((string)roamingSettings.Values["theme"] == "light")
-                RequestedTheme = ApplicationTheme.Light;
             else
                 RequestedTheme = ApplicationTheme.Light;
+  
 
             this.InitializeComponent();
             this.Suspending += OnSuspending;
@@ -49,22 +49,43 @@ namespace WinSplash
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            //Titlebar customization
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            // Set active window colors
-            titleBar.ForegroundColor = Windows.UI.Colors.DarkGreen;
-            titleBar.BackgroundColor = Windows.UI.Colors.White;
-            titleBar.ButtonForegroundColor = Windows.UI.Colors.DarkGreen;
-            titleBar.ButtonBackgroundColor = Windows.UI.Colors.White;
-            titleBar.ButtonHoverForegroundColor = Windows.UI.Colors.DarkGreen;
-            titleBar.ButtonHoverBackgroundColor = Windows.UI.Colors.WhiteSmoke;
-            titleBar.ButtonPressedForegroundColor = Windows.UI.Colors.White;
-            titleBar.ButtonPressedBackgroundColor = Windows.UI.Colors.DarkGreen;
-            // Set inactive window colors
-            titleBar.InactiveForegroundColor = Windows.UI.Colors.White;
-            titleBar.InactiveBackgroundColor = Windows.UI.Colors.White;
-            titleBar.ButtonInactiveForegroundColor = Windows.UI.Colors.Gray;
-            titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.White;
+            if ((string)roamingSettings.Values["theme"] == "dark")
+            {
+                // Set active window colors
+                titleBar.ForegroundColor = Windows.UI.Colors.Green;
+                titleBar.BackgroundColor = Windows.UI.Colors.Black;
+                titleBar.ButtonForegroundColor = Windows.UI.Colors.Green;
+                titleBar.ButtonBackgroundColor = Windows.UI.Colors.Black;
+                titleBar.ButtonHoverForegroundColor = Windows.UI.Colors.Green;
+                titleBar.ButtonHoverBackgroundColor = Windows.UI.Colors.DimGray;
+                titleBar.ButtonPressedForegroundColor = Windows.UI.Colors.Black;
+                titleBar.ButtonPressedBackgroundColor = Windows.UI.Colors.Green;
+                // Set inactive window colors
+                titleBar.InactiveForegroundColor = Windows.UI.Colors.Black;
+                titleBar.InactiveBackgroundColor = Windows.UI.Colors.Black;
+                titleBar.ButtonInactiveForegroundColor = Windows.UI.Colors.Gray;
+                titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Black;   
+            }
+            else
+            {
+                // Set active window colors
+                titleBar.ForegroundColor = Windows.UI.Colors.DarkGreen;
+                titleBar.BackgroundColor = Windows.UI.Colors.White;
+                titleBar.ButtonForegroundColor = Windows.UI.Colors.DarkGreen;
+                titleBar.ButtonBackgroundColor = Windows.UI.Colors.White;
+                titleBar.ButtonHoverForegroundColor = Windows.UI.Colors.DarkGreen;
+                titleBar.ButtonHoverBackgroundColor = Windows.UI.Colors.WhiteSmoke;
+                titleBar.ButtonPressedForegroundColor = Windows.UI.Colors.White;
+                titleBar.ButtonPressedBackgroundColor = Windows.UI.Colors.DarkGreen;
+                // Set inactive window colors
+                titleBar.InactiveForegroundColor = Windows.UI.Colors.White;
+                titleBar.InactiveBackgroundColor = Windows.UI.Colors.White;
+                titleBar.ButtonInactiveForegroundColor = Windows.UI.Colors.Gray;
+                titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.White;
+            }
+
+                
 
 
 

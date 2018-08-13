@@ -12,6 +12,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
 using Windows.Storage.Streams;
+using Windows.System.UserProfile;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -171,6 +172,24 @@ namespace WinSplash.Pages
                 if (result == ContentDialogResult.Primary)
                     SaveImage(sender, e);
             }
+        }
+
+        private async void SetWallpaper(object sender, RoutedEventArgs e)
+        {
+            string url = mainPage.unsplashImages[flipView.SelectedIndex].url;
+            byte[] data;
+            string filename = DateTime.Now.ToShortDateString();
+            HttpClient httpClient = new HttpClient();
+            HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
+            string mediaType = response.Content.Headers.ContentType.MediaType.Split('/')[1];
+            data = await response.Content.ReadAsByteArrayAsync();
+            filename += "." + mediaType;
+
+            //ApplicationData.Current.LocalFolder
+            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteBytesAsync(file, data);
+
+            await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(file);
         }
     }
 }

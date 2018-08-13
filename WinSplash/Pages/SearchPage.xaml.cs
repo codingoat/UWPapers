@@ -31,6 +31,7 @@ using Windows.UI.Notifications;
 using Microsoft.Toolkit.Uwp.Notifications; // Notifications library
 using Microsoft.QueryStringDotNET; // QueryString.NET
 using Windows.Storage.Streams;
+using Windows.System.UserProfile;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -72,7 +73,12 @@ namespace WinSplash
             else
                 res = "1920x1080";
 
-            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500,500));
+            if (roamingSettings.Values["amount"] != null)
+            {
+                ImageNumBox.SelectedIndex = (int)roamingSettings.Values["amount"];
+                Debug.WriteLine("selected in numbox " + (int)roamingSettings.Values["amount"]);
+            }
+            else Debug.WriteLine("no amount selected");
         }
 
 
@@ -313,24 +319,33 @@ namespace WinSplash
             }
         }
 
-        /*private void ImageOptionClick(object sender, RoutedEventArgs e)
+        private async void SetWallpaper(object sender, RoutedEventArgs e)
         {
-            FlyoutBase f = FlyoutBase.GetAttachedFlyout(flyoutBase);
+            string url = images[selectedImage].url;
+            byte[] data;
+            string filename = DateTime.Now.ToShortDateString();
+            HttpClient httpClient = new HttpClient();
+            HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
+            string mediaType = response.Content.Headers.ContentType.MediaType.Split('/')[1];
+            data = await response.Content.ReadAsByteArrayAsync();
+            filename += "." + mediaType;
 
-            Flyout.
+            //ApplicationData.Current.LocalFolder
+            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteBytesAsync(file, data);
 
-            switch (e.ClickedItem.ToString())
-            {
-                case "Copy Link":
-                    CopyUrl(images[selectedImage].url);
-                    break;
-                case "Copy Image":
-                    CopyUrl(images[selectedImage].url);
-                    break;
-                case "Save Image":
-                    SaveImage(images[selectedImage].url);
-                    break;
-            }
-        }*/
+            await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(file);
+        }
+
+        private void ImageNumBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            roamingSettings.Values["amount"] = ImageNumBox.SelectedIndex;
+            Debug.WriteLine("amount saved " + ImageNumBox.SelectedIndex);
+        }
+
+        private void ImageNumBox_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
