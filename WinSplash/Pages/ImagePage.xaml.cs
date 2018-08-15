@@ -126,7 +126,7 @@ namespace WinSplash.Pages
 
             FileSavePicker savePicker = new FileSavePicker();
             savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            savePicker.SuggestedFileName = "unsplash " + DateTime.Now.ToShortTimeString() + "_" + DateTime.Now.Second.ToString();
+            savePicker.SuggestedFileName = "unsplash " + DateTime.Now.ToString("d") + "_" + DateTime.Now.Second.ToString();
             savePicker.FileTypeChoices.Add("Image", new List<string>() { ".jpg" });
 
             StorageFile file = await savePicker.PickSaveFileAsync();
@@ -178,7 +178,7 @@ namespace WinSplash.Pages
         {
             string url = mainPage.unsplashImages[flipView.SelectedIndex].url;
             byte[] data;
-            string filename = DateTime.Now.ToShortDateString();
+            string filename = DateTime.Now.ToString("d");
             HttpClient httpClient = new HttpClient();
             HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
             string mediaType = response.Content.Headers.ContentType.MediaType.Split('/')[1];

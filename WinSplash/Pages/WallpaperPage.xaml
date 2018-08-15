@@ -8,7 +8,58 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <ProgressRing IsActive="True" />
-    </Grid>
+    <StackPanel>
+        <Button 
+            x:Name="wpButton"
+            Content="Start Service"
+             Click="wpButton_Click"   />
+
+
+
+        <TextBlock Text="Search Term"
+        Style="{StaticResource SubheaderTextBlockStyle}"
+        Margin="0,32,0,16"
+        />
+
+        <StackPanel Orientation="Horizontal">
+            <TextBox                            
+                FontSize="20"
+                x:Name="wpSearchBox" 
+                PlaceholderText="Leave empty for random images" 
+                HorizontalAlignment="Left"
+                TextWrapping="NoWrap"
+                Width="500"
+                TextChanged="wpSearchBox_TextChanged"/>
+            <ComboBox 
+                x:Name="wpFreqBox"
+                Width="auto"
+                Height="39"
+                Grid.Column="1"
+                Margin="16,0,0,0"
+                SelectionChanged="wpFreqBox_SelectionChanged">
+                <ComboBoxItem>Hourly</ComboBoxItem>
+                <ComboBoxItem>Tri-Hourly</ComboBoxItem>
+                <ComboBoxItem>Daily</ComboBoxItem>
+                <ComboBoxItem>Weekly</ComboBoxItem>
+            </ComboBox>
+
+        </StackPanel>
+
+        <TextBlock Text="Current wallpaper"
+            Style="{StaticResource SubheaderTextBlockStyle}"
+            Margin="0,32,0,16"/>
+
+        <Image 
+            x:Name="wpImage"
+            Width="700"
+               Height="auto"
+               Source="ms-appx:///Assets/Wide310x150Logo.png"
+               HorizontalAlignment="Left"
+               Margin="0,0,0,16"/>
+
+        <Button Content="Get new wallpaper"
+                Click="Button_Click"
+                />
+
+    </StackPanel>
 </Page>

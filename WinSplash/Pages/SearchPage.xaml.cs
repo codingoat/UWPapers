@@ -48,7 +48,6 @@ namespace WinSplash
         ApplicationDataContainer roamingSettings = ApplicationData.Current.RoamingSettings;
         string res;
         int selectedImage = 0;
-        FrameworkElement flyoutBase;
 
         public SearchPage()
         {
@@ -124,12 +123,15 @@ namespace WinSplash
 
         async Task<string> GetRedirectedUrl(string url)
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            /*HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
             req.Method = "HEAD";
             req.AllowAutoRedirect = true;
-
             WebResponse wr = await req.GetResponseAsync();
-            return  wr.ResponseUri.ToString();
+            return wr.ResponseUri.ToString();*/
+
+            HttpClient httpClient = new HttpClient(new HttpClientHandler() { AllowAutoRedirect = true});
+            HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
+            return response.RequestMessage.RequestUri.ToString();
         }
 
         public void Refresh(object sender, RoutedEventArgs e)
@@ -267,7 +269,7 @@ namespace WinSplash
 
             FileSavePicker savePicker = new FileSavePicker();
             savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            savePicker.SuggestedFileName = "unsplash " + DateTime.Now.ToShortTimeString() + "_" + DateTime.Now.Second.ToString();
+            savePicker.SuggestedFileName = "unsplash " + DateTime.Now.ToString("d") + "_" + DateTime.Now.Second.ToString();
             savePicker.FileTypeChoices.Add("Image", new List<string>() { ".jpg" });
 
             StorageFile file = await savePicker.PickSaveFileAsync();
@@ -323,7 +325,7 @@ namespace WinSplash
         {
             string url = images[selectedImage].url;
             byte[] data;
-            string filename = DateTime.Now.ToShortDateString();
+            string filename = DateTime.Now.ToString("d");
             HttpClient httpClient = new HttpClient();
             HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
             string mediaType = response.Content.Headers.ContentType.MediaType.Split('/')[1];

@@ -16,6 +16,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
+using Windows.ApplicationModel.Background;
+using System.Diagnostics;
 
 namespace WinSplash
 {
@@ -25,6 +27,61 @@ namespace WinSplash
     sealed partial class App : Application
     {
         Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+
+
+
+
+
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            base.OnBackgroundActivated(args);
+            IBackgroundTaskInstance taskInstance = args.TaskInstance;
+            Debug.WriteLine("BGTASK");
+
+
+            if((bool)roamingSettings.Values["wpTask"])
+            {
+                var builder = new BackgroundTaskBuilder();
+                builder.Name = "WallpaperTask";
+
+
+                switch ((int)roamingSettings.Values["wpTaskFreq"])
+                {
+                    default:
+                        builder.SetTrigger(new TimeTrigger(60, true));
+                        break;
+                    case 0:
+                        builder.SetTrigger(new TimeTrigger(60, true));
+                        break;
+                    case 1:
+                        builder.SetTrigger(new TimeTrigger(180, true));
+                        break;
+                    case 2:
+                        builder.SetTrigger(new TimeTrigger(1440, true));
+                        break;
+                    case 3:
+                        builder.SetTrigger(new TimeTrigger(10080, true));
+                        break;
+                }
+
+                builder.SetTrigger(new TimeTrigger(15, true)); //DEBUG
+                //BackgroundTaskRegistration task = builder.Register();
+
+                //WinSplash.Tasks.WallpaperTask.ChangeWallpaper();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -47,7 +104,7 @@ namespace WinSplash
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             if ((string)roamingSettings.Values["theme"] == "dark")
@@ -85,9 +142,50 @@ namespace WinSplash
                 titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.White;
             }
 
-                
+            //task
+            var taskRegistered = false;
+            var exampleTaskName = "WallpaperTask";
 
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+            {
+                if (task.Value.Name == exampleTaskName)
+                {
+                    taskRegistered = true;
+                    break;
+                }
+            }
 
+            if(!taskRegistered && roamingSettings.Values["wpTask"] != null && (bool)roamingSettings.Values["wpTask"])
+            {
+                await BackgroundExecutionManager.RequestAccessAsync();
+
+                var builder = new BackgroundTaskBuilder();
+
+                builder.Name = exampleTaskName;
+                builder.TaskEntryPoint = "Tasks.WallpaperTask";
+                switch ((int)roamingSettings.Values["wpTaskFreq"])
+                {
+                    default:
+                        builder.SetTrigger(new TimeTrigger(60, true));
+                        break;
+                    case 0:
+                        builder.SetTrigger(new TimeTrigger(60, true));
+                        break;
+                    case 1:
+                        builder.SetTrigger(new TimeTrigger(180, true));
+                        break;
+                    case 2:
+                        builder.SetTrigger(new TimeTrigger(1440, true));
+                        break;
+                    case 3:
+                        builder.SetTrigger(new TimeTrigger(10080, true));
+                        break;
+                }
+
+                builder.SetTrigger(new TimeTrigger(15, true)); //TESTING
+                builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                BackgroundTaskRegistration task = builder.Register();
+            }
 
 
             Frame rootFrame = Window.Current.Content as Frame;

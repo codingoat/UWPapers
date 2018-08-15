@@ -20,6 +20,7 @@
                                     <VisualState x:Name="Compact">
                                         <VisualState.Setters>
                                             <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource NavigationViewExpandedPaneBackground}"/>
+                                            <Setter Target="PaneTitleTextBlock.Margin" Value="49,-8,0,0"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Minimal">
@@ -36,12 +37,18 @@
                                     </VisualState>
                                 </VisualStateGroup>
                                 <VisualStateGroup x:Name="PaneStateListSizeGroup">
-                                    <VisualState x:Name="ListSizeFull"/>
+                                    <VisualState x:Name="ListSizeFull">
+                                        <VisualState.Setters>
+                                            <Setter Target="PaneTitleTextBlock.Margin" Value="49,-8,0,0"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
                                     <VisualState x:Name="ListSizeCompact">
                                         <VisualState.Setters>
                                             <Setter Target="MenuItemsHost.HorizontalAlignment" Value="Left"/>
                                             <Setter Target="MenuItemsHost.Width" Value="{Binding CompactPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                                             <Setter Target="PaneTitleTextBlock.Visibility" Value="Collapsed"/>
+                                            <Setter Target="TogglePaneButton.Width" Value="48"/>
+                                            <Setter Target="TogglePaneButton.HorizontalContentAlignment" Value="Center"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -109,27 +116,17 @@
                     ExpandedModeThresholdWidth="5000"
                     AlwaysShowHeader="True"
                     w10version1803:BackRequested="NavView_BackRequested">
+            <w10version1803:NavigationView.PaneTitle>
+                WinSplash
+            </w10version1803:NavigationView.PaneTitle>
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Find" Content="Browse" x:Name="search" Tag="search"/>
                 <NavigationViewItem Icon="Save" Content="Wallpaper" x:Name="wallpaper" Tag="wallpaper"/>
             </NavigationView.MenuItems>
-
             <NavigationView.HeaderTemplate>
                 <DataTemplate>
                     <Grid x:Name="HeaderBar"
                         Margin="12,10,0,0" VerticalAlignment="Center">
-                        <!-- <TextBox                            
-                           Grid.Column="1"
-                           FontSize="20"
-                            
-                           x:Name="SearchBox" PlaceholderText="Search Unsplash..." VerticalAlignment="Bottom"/>
-                        <CommandBar Grid.Column="2"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            DefaultLabelPosition="Right"
-                                    Height="40">
-                            <AppBarButton Label="Refresh" Icon="Refresh"/>
-                        </CommandBar> -->
                         <TextBlock x:Name="appTitle" Style="{StaticResource TitleTextBlockStyle}"
                         FontSize="28"
                         VerticalAlignment="Center"
