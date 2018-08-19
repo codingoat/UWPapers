@@ -144,11 +144,10 @@ namespace WinSplash
 
             //task
             var taskRegistered = false;
-            var exampleTaskName = "WallpaperTask";
 
             foreach (var task in BackgroundTaskRegistration.AllTasks)
             {
-                if (task.Value.Name == exampleTaskName)
+                if (task.Value.Name == "WallpaperTask")
                 {
                     taskRegistered = true;
                     break;
@@ -161,8 +160,8 @@ namespace WinSplash
 
                 var builder = new BackgroundTaskBuilder();
 
-                builder.Name = exampleTaskName;
-                builder.TaskEntryPoint = "Tasks.WallpaperTask";
+                builder.Name = "WallpaperTask";
+                builder.TaskEntryPoint = "WallpaperTaskNeo.Wptask";
                 switch ((int)roamingSettings.Values["wpTaskFreq"])
                 {
                     default:
@@ -182,7 +181,7 @@ namespace WinSplash
                         break;
                 }
 
-                builder.SetTrigger(new TimeTrigger(15, true)); //TESTING
+                //builder.SetTrigger(new TimeTrigger(15, true)); //TESTING
                 builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
                 BackgroundTaskRegistration task = builder.Register();
             }

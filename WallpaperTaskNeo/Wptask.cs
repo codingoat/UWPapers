@@ -9,26 +9,29 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Storage;
 using Windows.System.UserProfile;
+using Windows.UI.Notifications;
 
-namespace WinSplash.Tasks
+namespace WallpaperTaskNeo
 {
-    public sealed class WallpaperTask : IBackgroundTask
+    public sealed class Wptask : IBackgroundTask
     {
-        public static Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+        ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
         BackgroundTaskDeferral _deferral; // Note: defined at class scope so that we can mark it complete inside the OnCancel() callback if we choose to support cancellation
 
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
+            Debug.WriteLine("bgtask");
+
             _deferral = taskInstance.GetDeferral();
-            
-            if((bool)roamingSettings.Values["wpTask"])
+
+            if ((bool)roamingSettings.Values["wpTask"])
             {
                 await ChangeWallpaper();
 
                 await BackgroundExecutionManager.RequestAccessAsync();
                 var builder = new BackgroundTaskBuilder();
                 builder.Name = "WallpaperTask";
-                builder.TaskEntryPoint = "Tasks.WallpaperTask";
+                builder.TaskEntryPoint = "WallpaperTaskNeo.Wptask";
                 switch ((int)roamingSettings.Values["wpTaskFreq"])
                 {
                     default:
@@ -53,7 +56,7 @@ namespace WinSplash.Tasks
                 BackgroundTaskRegistration task = builder.Register();
             }
 
-            _deferral.Complete();    
+            _deferral.Complete();
         }
 
         async Task ChangeWallpaper()
@@ -95,12 +98,6 @@ namespace WinSplash.Tasks
 
         async Task<string> GetRedirectedUrl(string url)
         {
-            /*HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-            req.Method = "HEAD";
-            req.AllowAutoRedirect = true;
-            WebResponse wr = await req.GetResponseAsync();
-            return wr.ResponseUri.ToString();*/
-
             HttpClient httpClient = new HttpClient(new HttpClientHandler() { AllowAutoRedirect = true });
             HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
             return response.RequestMessage.RequestUri.ToString();

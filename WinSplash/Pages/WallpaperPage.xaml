@@ -12,7 +12,7 @@
         <Button 
             x:Name="wpButton"
             Content="Start Service"
-             Click="wpButton_Click"   />
+             Click="StartService"/>
 
 
 
@@ -55,10 +55,19 @@
                Height="auto"
                Source="ms-appx:///Assets/Wide310x150Logo.png"
                HorizontalAlignment="Left"
-               Margin="0,0,0,16"/>
+               Margin="0,0,0,16">
+            <Image.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Save Image" Icon="Save" Click="SaveImage"/>
+                    <MenuFlyoutItem Text="Copy Image" Icon="Copy" Click="CopyImage"/>
+                    <MenuFlyoutItem Text="Copy Link" Icon="Link" Click="CopyUrl"/>
+                    <MenuFlyoutItem Text="Set Wallpaper" Icon="Street" Click="SetWallpaper"/>
+                </MenuFlyout>
+            </Image.ContextFlyout>
+        </Image>
 
         <Button Content="Get new wallpaper"
-                Click="Button_Click"
+                Click="GetNewWallpaper"
                 />
 
     </StackPanel>

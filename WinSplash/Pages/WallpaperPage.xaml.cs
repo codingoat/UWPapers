@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Diagnostics;
+using System.Net.Http;
 using Windows.ApplicationModel.Background;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.System.UserProfile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -63,56 +55,53 @@ namespace WinSplash.Pages
 
         }
 
-        private void RadioChecked(object sender, RoutedEventArgs e)
-        {
-            RadioButton rb = sender as RadioButton;
-            if(rb.Tag.ToString() == "on")
-            {
-                roamingSettings.Values["wpTask"] = true;
-                roamingSettings.Values["wpTaskFreq"] = wpFreqBox.SelectedIndex;
-                roamingSettings.Values["wpTaskSearch"] = wpSearchBox.Text;
-
-                var builder = new BackgroundTaskBuilder();
-                builder.Name = "WallpaperTask";
-                switch((int)roamingSettings.Values["wpTaskFreq"])
-                {
-                    default:
-                        builder.SetTrigger(new TimeTrigger(60, true));
-                        break;
-                    case 0:
-                        builder.SetTrigger(new TimeTrigger(60, true));
-                        break;
-                    case 1:
-                        builder.SetTrigger(new TimeTrigger(180, true));
-                        break;
-                    case 2:
-                        builder.SetTrigger(new TimeTrigger(1440, true));
-                        break;
-                    case 3:
-                        builder.SetTrigger(new TimeTrigger(10080, true));
-                        break;
-                }
-
-                builder.SetTrigger(new TimeTrigger(15, true)); //DEBUG
-                //BackgroundTaskRegistration task = builder.Register();
-                //WinSplash.Tasks.WallpaperTask.ChangeWallpaper();
-            }
-            else
-            {
-                roamingSettings.Values["wpTask"] = false;
-            }
-
-        }
-
         private void wpFreqBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             roamingSettings.Values["wpTaskFreq"] = wpFreqBox.SelectedIndex;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void GetNewWallpaper(object sender, RoutedEventArgs e)
         {
             roamingSettings.Values["wpTaskSearch"] = wpSearchBox.Text;
-            //WinSplash.Tasks.WallpaperTask.ChangeWallpaper();
+
+
+            string search = (string)roamingSettings.Values["wpTaskSearch"];
+            string url;
+            string res;
+
+            if (roamingSettings.Values["res"] != null)
+                res = roamingSettings.Values["res"] as string;
+            else
+                res = "1920x1080";
+
+
+            if (search == "")
+                url = await Utils.GetRedirectedUrl("https://source.unsplash.com/random/" + res + "?sig=" + 1);
+            else
+                url = await Utils.GetRedirectedUrl("https://source.unsplash.com/" + res + "/?" + search + "&sig=" + 1);
+            Debug.WriteLine(DateTime.Now + url);
+
+
+
+            byte[] data;
+            string filename = DateTime.Now.ToString("d");
+            HttpClient httpClient = new HttpClient();
+            HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
+            string mediaType = response.Content.Headers.ContentType.MediaType.Split('/')[1];
+            data = await response.Content.ReadAsByteArrayAsync();
+            filename += "." + mediaType;
+
+            //ApplicationData.Current.LocalFolder
+            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteBytesAsync(file, data);
+
+            await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(file);
+
+            roamingSettings.Values["wpTaskUrl"] = url;
+
+            BitmapImage i = new BitmapImage();
+            i.UriSource = new Uri((string)roamingSettings.Values["wpTaskUrl"], UriKind.Absolute);
+            wpImage.Source = i;
         }
 
         private void wpSearchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -120,7 +109,7 @@ namespace WinSplash.Pages
             roamingSettings.Values["wpTaskSearch"] = wpSearchBox.Text;
         }
 
-        private async void wpButton_Click(object sender, RoutedEventArgs e)
+        private async void StartService(object sender, RoutedEventArgs e)
         {
             if ((bool)roamingSettings.Values["wpTask"])
             {
@@ -135,7 +124,7 @@ namespace WinSplash.Pages
                 await BackgroundExecutionManager.RequestAccessAsync();
                 var builder = new BackgroundTaskBuilder();
                 builder.Name = "WallpaperTask";
-                builder.TaskEntryPoint = "Tasks.WallpaperTask";
+                builder.TaskEntryPoint = "WallpaperTaskNeo.Wptask";
                 switch ((int)roamingSettings.Values["wpTaskFreq"])
                 {
                     default:
@@ -155,10 +144,35 @@ namespace WinSplash.Pages
                         break;
                 }
 
-                builder.SetTrigger(new TimeTrigger(15, true)); //TESTING
+                //builder.SetTrigger(new TimeTrigger(15, true)); //TESTING
                 builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
                 BackgroundTaskRegistration task = builder.Register();
             }
+        }
+
+        private void CopyUrl(object sender, RoutedEventArgs e)
+        {
+            Utils.CopyUrl((String) roamingSettings.Values["wpTaskUrl"]);
+            Utils.NotifyImage("Link copied to clipboard", (String)roamingSettings.Values["wpTaskUrl"], 10);
+            
+            //await Windows.System.Launcher.LaunchUriAsync(new Uri(btn.Tag.ToString(), UriKind.Absolute));
+        }
+
+        private void CopyImage(object sender, RoutedEventArgs e)
+        {
+            Utils.CopyImage((String)roamingSettings.Values["wpTaskUrl"]);
+            Utils.NotifyImage("Image copied to clipboard", (String)roamingSettings.Values["wpTaskUrl"], 10);
+        }
+
+
+        private async void SaveImage(object sender, RoutedEventArgs e)
+        {
+            await Utils.SaveImage((String)roamingSettings.Values["wpTaskUrl"]);
+        }
+
+        private async void SetWallpaper(object sender, RoutedEventArgs e)
+        {
+            await Utils.SetWallpaper((String)roamingSettings.Values["wpTaskUrl"]);
         }
     }
 }

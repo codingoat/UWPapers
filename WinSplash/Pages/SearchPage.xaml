@@ -46,8 +46,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
             Margin="0,0,110,0"
-            SelectionChanged="ImageNumBox_SelectionChanged"
-            Loaded="ImageNumBox_Loaded"/>
+            SelectionChanged="ImageNumBox_SelectionChanged"/>
         <CommandBar Grid.Column="1"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"

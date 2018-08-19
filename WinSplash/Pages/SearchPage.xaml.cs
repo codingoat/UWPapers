@@ -2,36 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Core;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using WinSplash.Datatypes;
 using WinSplash.Pages;
-using Windows.UI.Xaml.Media.Animation;
-using System.Net.Http;
-using Windows.Storage;
-using Windows.UI.Popups;
-using Windows.Storage.Pickers;
-using Windows.Storage.Provider;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.UI.Notifications;
-using Microsoft.Toolkit.Uwp.Notifications; // Notifications library
-using Microsoft.QueryStringDotNET; // QueryString.NET
-using Windows.Storage.Streams;
-using Windows.System.UserProfile;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -108,9 +89,9 @@ namespace WinSplash
             {
                 string url;
                 if (search == "")
-                    url = await GetRedirectedUrl("https://source.unsplash.com/random/" + res + "?sig=" + i);
+                    url = await Utils.GetRedirectedUrl("https://source.unsplash.com/random/" + res + "?sig=" + i);
                 else
-                    url = await GetRedirectedUrl("https://source.unsplash.com/" + res + "/?" + search + "&sig=" + i);
+                    url = await Utils.GetRedirectedUrl("https://source.unsplash.com/" + res + "/?" + search + "&sig=" + i);
                 Debug.WriteLine(DateTime.Now + url);
                 myImages.Add(new UnsplashImage(i, url));
 
@@ -119,19 +100,6 @@ namespace WinSplash
             }
             images = myImages;
             return myImages;
-        }
-
-        async Task<string> GetRedirectedUrl(string url)
-        {
-            /*HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-            req.Method = "HEAD";
-            req.AllowAutoRedirect = true;
-            WebResponse wr = await req.GetResponseAsync();
-            return wr.ResponseUri.ToString();*/
-
-            HttpClient httpClient = new HttpClient(new HttpClientHandler() { AllowAutoRedirect = true});
-            HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
-            return response.RequestMessage.RequestUri.ToString();
         }
 
         public void Refresh(object sender, RoutedEventArgs e)
@@ -174,10 +142,6 @@ namespace WinSplash
                 Image timg = new Image();
                 timg.Source = new BitmapImage(new Uri(ui.url, UriKind.Absolute));
                 flipimgs.Add(timg);
-
-                /*if ((string)btnimg.Tag == ui.url)
-                    index = tindex;
-                tindex++;*/
             }
 
             Debug.WriteLine("selected " + btn.Tag);
@@ -193,161 +157,39 @@ namespace WinSplash
 
         private void ImageClickR(object sender, RightTappedRoutedEventArgs e)
         {
-;
             Button btn = (Button)sender;
             selectedImage = (int) btn.Tag;
-            //FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-            //flyoutBase = (FrameworkElement)sender;
         }
 
 
         private void CopyUrl(object sender, RoutedEventArgs e)
         {
-            string url = images[selectedImage].url;
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.RequestedOperation = DataPackageOperation.Copy;
-            dataPackage.SetText(url);
-            Clipboard.SetContent(dataPackage);
+            Utils.CopyUrl(images[selectedImage].url);
+            Utils.NotifyImage("Link copied to clipboard", images[selectedImage].url, 10);
 
-            // Construct the visuals of the toast
-            ToastVisual visual = new ToastVisual(){BindingGeneric = new ToastBindingGeneric(){Children ={
-                new AdaptiveText(){Text = "Link copied to clipboard"},
-                new AdaptiveImage(){Source = url}
-            }}};
-            ToastContent toastContent = new ToastContent()
-            {
-                Visual = visual
-            };
-            var toast = new ToastNotification(toastContent.GetXml());
-            toast.ExpirationTime = DateTime.Now.AddSeconds(10);
-            ToastNotificationManager.CreateToastNotifier().Show(toast);
-
-
-            //await Windows.System.Launcher.LaunchUriAsync(new Uri(btn.Tag.ToString(), UriKind.Absolute));
+            //await Windows.System.Launcher.LaunchUriAsync(new Uri(btn.Tag.ToString(), UriKind.Absolute)); //open browser
         }
 
         private void CopyImage(object sender, RoutedEventArgs e)
         {
-            string url = images[selectedImage].url;
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.RequestedOperation = DataPackageOperation.Copy;
-            dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromUri(new Uri(url, UriKind.Absolute)));
-            Clipboard.SetContent(dataPackage);
-
-            // Construct the visuals of the toast
-            ToastVisual visual = new ToastVisual()
-            {
-                BindingGeneric = new ToastBindingGeneric()
-                {
-                    Children ={
-                new AdaptiveText(){Text = "Image copied to clipboard"},
-                new AdaptiveImage(){Source = url}
-            }
-                }
-            };
-            ToastContent toastContent = new ToastContent()
-            {
-                Visual = visual
-            };
-            var toast = new ToastNotification(toastContent.GetXml());
-            toast.ExpirationTime = DateTime.Now.AddSeconds(10);
-            ToastNotificationManager.CreateToastNotifier().Show(toast);
+            Utils.CopyImage(images[selectedImage].url);
+            Utils.NotifyImage("Image copied to clipboard", images[selectedImage].url, 10);
         }
-
 
         private async void SaveImage(object sender, RoutedEventArgs e)
         {
-            string url = images[selectedImage].url;
-            byte[] data;
-            string filename = DateTime.Now.ToString();
-            HttpClient httpClient = new HttpClient();
-            HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
-            string mediaType = response.Content.Headers.ContentType.MediaType.Split('/')[1];
-            data = await response.Content.ReadAsByteArrayAsync();
-            filename += "." + mediaType;
-
-
-            FileSavePicker savePicker = new FileSavePicker();
-            savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            savePicker.SuggestedFileName = "unsplash " + DateTime.Now.ToString("d") + "_" + DateTime.Now.Second.ToString();
-            savePicker.FileTypeChoices.Add("Image", new List<string>() { ".jpg" });
-
-            StorageFile file = await savePicker.PickSaveFileAsync();
-            if(file != null)
-            {
-                // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
-                CachedFileManager.DeferUpdates(file);
-                // write to file
-                await FileIO.WriteBytesAsync(file, data);
-                // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
-                // Completing updates may require Windows to ask for user input.
-                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-                if (status == FileUpdateStatus.Complete)
-                {
-                    ContentDialog dialog = new ContentDialog
-                    {
-                        Title = "Image saved",
-                        Content = "Image has been saved to " + file.Path + ".",
-                        CloseButtonText = "Ok",
-                    };
-                    ContentDialogResult result = await dialog.ShowAsync();
-                }
-                else
-                {
-                    ContentDialog dialog = new ContentDialog
-                    {
-                        Title = "Error",
-                        Content = "Image could not be saved.",
-                        CloseButtonText = "Ok",
-                        PrimaryButtonText = "Try again"
-                    };
-                    ContentDialogResult result = await dialog.ShowAsync();
-                    if (result == ContentDialogResult.Primary)
-                        SaveImage(sender, e);
-                }
-            }
-            else
-            {
-                ContentDialog dialog = new ContentDialog
-                {
-                    Title = "Error",
-                    Content = "Saving canceled.",
-                    CloseButtonText = "Ok",
-                    PrimaryButtonText = "Try again"
-                };
-                ContentDialogResult result = await dialog.ShowAsync();
-                if (result == ContentDialogResult.Primary)
-                    SaveImage(sender, e);
-            }
+            await Utils.SaveImage(images[selectedImage].url);
         }
 
         private async void SetWallpaper(object sender, RoutedEventArgs e)
         {
-            string url = images[selectedImage].url;
-            byte[] data;
-            string filename = DateTime.Now.ToString("d");
-            HttpClient httpClient = new HttpClient();
-            HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
-            string mediaType = response.Content.Headers.ContentType.MediaType.Split('/')[1];
-            data = await response.Content.ReadAsByteArrayAsync();
-            filename += "." + mediaType;
-
-            //ApplicationData.Current.LocalFolder
-            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
-            await FileIO.WriteBytesAsync(file, data);
-
-            await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(file);
+            await Utils.SetWallpaper(images[selectedImage].url);
         }
 
         private void ImageNumBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             roamingSettings.Values["amount"] = ImageNumBox.SelectedIndex;
             Debug.WriteLine("amount saved " + ImageNumBox.SelectedIndex);
-        }
-
-        private void ImageNumBox_Loaded(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
