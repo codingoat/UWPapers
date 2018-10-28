@@ -7,7 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    xmlns:datatypes="using:WinSplash.Datatypes">
+    xmlns:datatypes="using:WinSplash.Datatypes"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"  
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -70,7 +72,7 @@
             Grid.ColumnSpan="2" Padding="0,25,16,0"
             Margin="0,0,-24,0"
             IsTabStop="True">
-            
+
             <GridView 
                 x:Name="ImageGrid"
                 ItemsSource="{x:Bind images}"
@@ -90,10 +92,21 @@
                             Height="300" Width="300"
                             Tag="{Binding id}">
                             <StackPanel Margin="-10">
-                                <Image Source="{Binding url}" 
+                                <Image Source="{Binding smallUrl}" 
                                        Stretch="UniformToFill"
                                     Width="300"
-                                    Height="300"/>
+                                    Height="300"
+                                    Opacity="0">
+                                    <interactivity:Interaction.Behaviors>
+                                        <behaviors:Fade x:Name="FadeBehavior" 
+                                            Value="1" 
+                                            Duration="500" 
+                                            Delay="500"
+                                            EasingType="Default"
+                                            AutomaticallyStart="True"/>
+                                    </interactivity:Interaction.Behaviors>
+
+                                </Image>
                             </StackPanel>
                             <Button.ContextFlyout>
                                 <MenuFlyout>
@@ -123,7 +136,7 @@
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ListView.ItemTemplate> -->
-                                    <!--<StackPanel>
+                            <!--<StackPanel>
                                         <Button Content="Save Image"
                                                 Click="SaveImage"
                                                 Tag="{Binding url}"/>
@@ -154,4 +167,6 @@
 
 
     </Grid>
+
+
 </Page>

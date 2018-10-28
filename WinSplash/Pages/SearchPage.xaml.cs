@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+using PixabaySharp;
+using PixabaySharp.Utility;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -20,9 +23,10 @@ namespace WinSplash
 {
     public sealed partial class SearchPage : Page
     {
-        public ObservableCollection<UnsplashImage> images = new ObservableCollection<UnsplashImage>();
+        public ObservableCollection<PixaImage> images = new ObservableCollection<PixaImage>();
         ObservableCollection<int> imageNum = new ObservableCollection<int>();
         ObservableCollection<ImageOption> imageOptions = new ObservableCollection<ImageOption>();
+        PixabaySharpClient pixabayClient = new PixabaySharpClient("3153915-c1b347f3736d73ef2cd6a0e79");
 
         MainPage mainPage;
 
@@ -65,19 +69,20 @@ namespace WinSplash
         public async void GetImages()
         {
             Spinner.IsActive = true;
-            images = new ObservableCollection<UnsplashImage>();
+            images = new ObservableCollection<PixaImage>();
             ImageGrid.ItemsSource = images;
 
             Debug.WriteLine("started downloading" + DateTime.Now);
-            images = await AddImages();
+            //images = await AddImages();
+            await AddImages();
 
             //ImageGrid.ItemsSource = images;
             Spinner.IsActive = false;
         }
 
-        async Task<ObservableCollection<UnsplashImage>> AddImages (){
-            ObservableCollection<UnsplashImage> myImages = new ObservableCollection<UnsplashImage>();
-
+        async Task<int> AddImages()
+        {
+            //ObservableCollection<PixaImage> myImages = new ObservableCollection<PixaImage>();
             int amount;
             string search = SearchBox.Text;
 
@@ -85,29 +90,59 @@ namespace WinSplash
                 amount = imageNum[ImageNumBox.SelectedIndex];
             else amount = 5;
 
-            for (int i = 0; i < amount; i++)
+            PixabaySharp.Models.ImageResult result = null;
+            images = new ObservableCollection<PixaImage>();
+            if (search == "")
             {
-                string url;
-                if (search == "")
-                    url = await Utils.GetRedirectedUrl("https://source.unsplash.com/random/" + res + "?sig=" + i);
-                else
-                    url = await Utils.GetRedirectedUrl("https://source.unsplash.com/" + res + "/?" + search + "&sig=" + i);
-                Debug.WriteLine(DateTime.Now + url);
-                myImages.Add(new UnsplashImage(i, url));
+                while(result == null) //the library sometimes returns null for some reason
+                {
+                    result = await pixabayClient.QueryImagesAsync(new ImageQueryBuilder()
+                    {
+                        Page = 1,
+                        PerPage = 200
+                    });
+                }
 
-                images.Add(new UnsplashImage(i, url));
-                ImageGrid.ItemsSource = images;
+                Random r = new Random();
+                int[] pickedImgs = {};
+
+                for (int i=0; i<amount; i++)
+                {
+                    int ran = r.Next(199);
+                    images.Add(new PixaImage(i, result.Images[ran].ImageURL, result.Images[ran].WebformatURL, result.Images[ran].FullHDImageURL, result.Images[ran].PageURL));
+                    ImageGrid.ItemsSource = images;
+                }
+
             }
-            images = myImages;
-            return myImages;
+            else
+            {
+                while (result == null) //the library sometimes returns null for some reason
+                {
+                    result = await pixabayClient.QueryImagesAsync(new ImageQueryBuilder()
+                    {
+                        Query = search,
+                        Page = 1,
+                        PerPage = amount
+                    });
+                }
+                
+                int i = 0;
+                foreach (PixabaySharp.Models.ImageItem img in result.Images)
+                {
+                    images.Add(new PixaImage(i++, img.ImageURL, img.WebformatURL, img.FullHDImageURL, img.PageURL));
+                    ImageGrid.ItemsSource = images;
+                }
+            }
+            return 0;
+
         }
 
         public void Refresh(object sender, RoutedEventArgs e)
         {
             SearchBox.Text = "";
-            if (images.Count == 0 && mainPage.unsplashImages.Count != 0) //first load
+            if (images.Count == 0 && mainPage.pixaImages.Count != 0) //first load
             {
-                images = mainPage.unsplashImages;
+                images = mainPage.pixaImages;
                 ImageGrid.ItemsSource = images;
                 Spinner.IsActive = false;
             }
@@ -137,16 +172,16 @@ namespace WinSplash
             //int tindex = 0;
             //int index = 0;
 
-            foreach (UnsplashImage ui in images)
+            foreach (PixaImage ui in images) //sends bitmap images to FlipView
             {
                 Image timg = new Image();
-                timg.Source = new BitmapImage(new Uri(ui.url, UriKind.Absolute));
+                timg.Source = new BitmapImage(new Uri(ui.bigUrl, UriKind.Absolute));
                 flipimgs.Add(timg);
             }
 
             Debug.WriteLine("selected " + btn.Tag);
 
-            mainPage.unsplashImages = images;
+            mainPage.pixaImages = images;
             mainPage.storedImages = flipimgs;
             mainPage.theNavView.IsBackButtonVisible = NavigationViewBackButtonVisible.Visible;
             mainPage.theNavView.IsBackEnabled = true;
@@ -190,6 +225,13 @@ namespace WinSplash
         {
             roamingSettings.Values["amount"] = ImageNumBox.SelectedIndex;
             Debug.WriteLine("amount saved " + ImageNumBox.SelectedIndex);
+        }
+
+        private async void FadeInImage(object sender, RoutedEventArgs e)
+        {
+            Image imgw = (Image)sender;
+            await imgw.Fade(value: 1, duration: 300, delay: 300, easingType: EasingType.Default).StartAsync();
+            //await Utils.SaveImage(images[selectedImage].url);
         }
     }
 }

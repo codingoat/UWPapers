@@ -41,7 +41,7 @@ namespace WinSplash
         public NavigationView theNavView;
         public Frame theContentFrame;
 
-        public ObservableCollection<UnsplashImage> unsplashImages = new ObservableCollection<UnsplashImage>();
+        public ObservableCollection<PixaImage> pixaImages = new ObservableCollection<PixaImage>();
         public List<Image> storedImages = new List<Image>();
 
 
@@ -91,7 +91,7 @@ namespace WinSplash
             if(ContentFrame.CurrentSourcePageType == typeof(SearchPage)) //save loaded images
             {
                 SearchPage sp = (SearchPage)ContentFrame.Content;
-                unsplashImages = sp.images;
+                pixaImages = sp.images;
             }
 
 

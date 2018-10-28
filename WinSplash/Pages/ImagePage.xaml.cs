@@ -22,8 +22,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace WinSplash.Pages
 {
     /// <summary>
@@ -58,7 +56,7 @@ namespace WinSplash.Pages
         {
             DataPackage dataPackage = new DataPackage();
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
-            dataPackage.SetText(mainPage.unsplashImages[flipView.SelectedIndex].url);
+            dataPackage.SetText(mainPage.pixaImages[flipView.SelectedIndex].url);
             Clipboard.SetContent(dataPackage);
 
 
@@ -69,7 +67,7 @@ namespace WinSplash.Pages
                 {
                     Children ={
                 new AdaptiveText(){Text = "Link copied to clipboard"},
-                new AdaptiveImage(){Source = mainPage.unsplashImages[flipView.SelectedIndex].url}
+                new AdaptiveImage(){Source = mainPage.pixaImages[flipView.SelectedIndex].url}
             }
                 }
             };
@@ -86,7 +84,7 @@ namespace WinSplash.Pages
 
         private void CopyImage(object sender, RoutedEventArgs e)
         {
-            string url = mainPage.unsplashImages[flipView.SelectedIndex].url;
+            string url = mainPage.pixaImages[flipView.SelectedIndex].url;
             DataPackage dataPackage = new DataPackage();
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
             dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromUri(new Uri(url, UriKind.Absolute)));
@@ -114,7 +112,7 @@ namespace WinSplash.Pages
 
         private async void SaveImage(object sender, RoutedEventArgs e)
         {
-            string url = mainPage.unsplashImages[flipView.SelectedIndex].url;
+            string url = mainPage.pixaImages[flipView.SelectedIndex].url;
             byte[] data;
             string filename = DateTime.Now.ToString();
             HttpClient httpClient = new HttpClient();
@@ -176,7 +174,7 @@ namespace WinSplash.Pages
 
         private async void SetWallpaper(object sender, RoutedEventArgs e)
         {
-            string url = mainPage.unsplashImages[flipView.SelectedIndex].url;
+            string url = mainPage.pixaImages[flipView.SelectedIndex].url;
             byte[] data;
             string filename = DateTime.Now.ToString("d");
             HttpClient httpClient = new HttpClient();
