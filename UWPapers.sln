@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinSplash", "WinSplash\WinSplash.csproj", "{3F73BC2D-E61F-40FA-8BE4-B7114EE062D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWPapers", "WinSplash\UWPapers.csproj", "{3F73BC2D-E61F-40FA-8BE4-B7114EE062D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WallpaperTaskNeo", "WallpaperTaskNeo\WallpaperTaskNeo.csproj", "{87804CD9-FE26-47ED-B7A1-22D94AA70A15}"
 EndProject

@@ -13,8 +13,10 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50px"/>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="50px"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,15 +25,17 @@
 
         <TextBox                            
             Grid.Column="0"
+            Grid.ColumnSpan="2"
             FontSize="20"
             x:Name="SearchBox" 
             KeyDown="SearchBox_KeyDown"
-            PlaceholderText="Search Unsplash..." 
+            PlaceholderText="Search Pixabay..." 
             VerticalAlignment="Top"
             TextWrapping="NoWrap"
             Margin="0,0,80,0"/>
 
         <CommandBar Grid.Column="0"
+                    Grid.ColumnSpan="2"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             DefaultLabelPosition="Collapsed"
@@ -44,12 +48,14 @@
             x:Name="ImageNumBox"
             Width="auto"
             Height="39"
-            Grid.Column="1"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
             Margin="0,0,110,0"
             SelectionChanged="ImageNumBox_SelectionChanged"/>
-        <CommandBar Grid.Column="1"
+        <CommandBar Grid.Column="2"
+                    Grid.ColumnSpan="2"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             DefaultLabelPosition="Right"
@@ -62,15 +68,53 @@
             x:Name="Spinner"
             IsActive="True"
             Grid.Row="1"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="4"
             Width="100"
             Height="100"
-            Loaded="Refresh"/>
+            Loaded="Refresh" 
+            >
+            <!-- Loaded="Refresh": Load images on opening app -->
+            
+            <interactivity:Interaction.Behaviors>
+                <behaviors:Fade x:Name="FadeBehavior" 
+                                            Value="1" 
+                                            Duration="300" 
+                                            Delay="300"
+                                            EasingType="Default"
+                                            AutomaticallyStart="True"/>
+            </interactivity:Interaction.Behaviors>
+        </ProgressRing>
+
+
+        <Button
+            x:Name="ButtonLeft"
+            Click="ChangePage"
+            IsEnabled="False"
+            Grid.Row="1"
+            Width="50px"
+            VerticalAlignment="Stretch"
+            Margin="0 30 0 30">
+            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE76B;" FontSize="35"/>
+        </Button>
+
+        <Button
+            x:Name="ButtonRight"
+            Click="ChangePage"
+            IsEnabled="False"
+            Grid.Row="1"
+            Grid.Column="3"
+            Width="50px"
+            VerticalAlignment="Stretch"
+            Margin="0 30 0 30">
+            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE76C;" FontSize="35"/>
+        </Button>
 
         <ScrollViewer
             Grid.Row="1"
-            Grid.ColumnSpan="2" Padding="0,25,16,0"
-            Margin="0,0,-24,0"
+            Grid.Column="1"
+            Grid.ColumnSpan="2" 
+            Padding="0,0,16,0"
+            Margin="0,16,8,0"
             IsTabStop="True">
 
             <GridView 
@@ -81,6 +125,7 @@
                 CanDragItems="False"
                 SelectionMode="None"
                 HorizontalAlignment="Center"
+                Margin="0"
                 >
 
                 <GridView.ItemTemplate>

@@ -17,7 +17,6 @@ using Windows.UI.Xaml.Navigation;
 using WinSplash.Datatypes;
 using WinSplash.Pages;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace WinSplash
 {
@@ -33,6 +32,8 @@ namespace WinSplash
         ApplicationDataContainer roamingSettings = ApplicationData.Current.RoamingSettings;
         string res;
         int selectedImage = 0;
+        public int pixaPage;
+
 
         public SearchPage()
         {
@@ -58,17 +59,28 @@ namespace WinSplash
                 res = "1920x1080";
 
             if (roamingSettings.Values["amount"] != null)
-            {
                 ImageNumBox.SelectedIndex = (int)roamingSettings.Values["amount"];
-                Debug.WriteLine("selected in numbox " + (int)roamingSettings.Values["amount"]);
+            else
+                Debug.WriteLine("no amount selected");
+
+            //Debug.WriteLine("images count: " + images.Count);
+            //Debug.WriteLine("mainpage images count: " + mainPage.pixaImages.Count);
+            pixaPage = mainPage.pixaPage;
+            if (mainPage.pixaImages.Count != 0)
+            {
+                if (pixaPage != 1)
+                    ButtonLeft.IsEnabled = true;
+                ButtonRight.IsEnabled = true;
+                Debug.WriteLine("Enabled buttons");
             }
-            else Debug.WriteLine("no amount selected");
         }
 
 
         public async void GetImages()
         {
             Spinner.IsActive = true;
+            ButtonLeft.IsEnabled = false;
+            ButtonRight.IsEnabled = false;
             images = new ObservableCollection<PixaImage>();
             ImageGrid.ItemsSource = images;
 
@@ -78,6 +90,9 @@ namespace WinSplash
 
             //ImageGrid.ItemsSource = images;
             Spinner.IsActive = false;
+            if(pixaPage != 1)
+                ButtonLeft.IsEnabled = true;
+            ButtonRight.IsEnabled = true;
         }
 
         async Task<int> AddImages()
@@ -94,22 +109,19 @@ namespace WinSplash
             images = new ObservableCollection<PixaImage>();
             if (search == "")
             {
-                while(result == null) //the library sometimes returns null for some reason
+                while (result == null) //the library sometimes returns null for some reason
                 {
                     result = await pixabayClient.QueryImagesAsync(new ImageQueryBuilder()
                     {
-                        Page = 1,
-                        PerPage = 200
+                        Page = pixaPage,
+                        PerPage = amount
                     });
                 }
 
-                Random r = new Random();
-                int[] pickedImgs = {};
-
-                for (int i=0; i<amount; i++)
+                int i = 0;
+                foreach (PixabaySharp.Models.ImageItem img in result.Images)
                 {
-                    int ran = r.Next(199);
-                    images.Add(new PixaImage(i, result.Images[ran].ImageURL, result.Images[ran].WebformatURL, result.Images[ran].FullHDImageURL, result.Images[ran].PageURL));
+                    images.Add(new PixaImage(i++, img.ImageURL, img.WebformatURL, img.FullHDImageURL, img.PageURL));
                     ImageGrid.ItemsSource = images;
                 }
 
@@ -121,7 +133,7 @@ namespace WinSplash
                     result = await pixabayClient.QueryImagesAsync(new ImageQueryBuilder()
                     {
                         Query = search,
-                        Page = 1,
+                        Page = pixaPage,
                         PerPage = amount
                     });
                 }
@@ -224,7 +236,6 @@ namespace WinSplash
         private void ImageNumBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             roamingSettings.Values["amount"] = ImageNumBox.SelectedIndex;
-            Debug.WriteLine("amount saved " + ImageNumBox.SelectedIndex);
         }
 
         private async void FadeInImage(object sender, RoutedEventArgs e)
@@ -232,6 +243,17 @@ namespace WinSplash
             Image imgw = (Image)sender;
             await imgw.Fade(value: 1, duration: 300, delay: 300, easingType: EasingType.Default).StartAsync();
             //await Utils.SaveImage(images[selectedImage].url);
+        }
+
+        private void ChangePage(object sender, RoutedEventArgs e)
+        {
+            if ((Button)sender == ButtonLeft)
+                pixaPage--;
+            else
+                pixaPage++;
+
+            mainPage.pixaPage = pixaPage;
+            GetImages();
         }
     }
 }

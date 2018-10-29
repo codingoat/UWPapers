@@ -43,6 +43,7 @@ namespace WinSplash
 
         public ObservableCollection<PixaImage> pixaImages = new ObservableCollection<PixaImage>();
         public List<Image> storedImages = new List<Image>();
+        public int pixaPage = 1;
 
 
         public MainPage()
@@ -92,6 +93,7 @@ namespace WinSplash
             {
                 SearchPage sp = (SearchPage)ContentFrame.Content;
                 pixaImages = sp.images;
+                //pixaPage = sp.pixaPage;
             }
 
 
