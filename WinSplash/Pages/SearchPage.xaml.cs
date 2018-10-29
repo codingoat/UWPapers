@@ -30,7 +30,7 @@ namespace WinSplash
         MainPage mainPage;
 
         ApplicationDataContainer roamingSettings = ApplicationData.Current.RoamingSettings;
-        string res;
+        string[] res;
         int selectedImage = 0;
         public int pixaPage;
 
@@ -54,9 +54,9 @@ namespace WinSplash
             mainPage = (MainPage)windowframe.Content;
 
             if (roamingSettings.Values["res"] != null)
-                res = roamingSettings.Values["res"] as string;
+                res = (roamingSettings.Values["res"] as string).Split('x');
             else
-                res = "1920x1080";
+                res = new string[] { "1920", "1080" };
 
             if (roamingSettings.Values["amount"] != null)
                 ImageNumBox.SelectedIndex = (int)roamingSettings.Values["amount"];
@@ -114,7 +114,9 @@ namespace WinSplash
                     result = await pixabayClient.QueryImagesAsync(new ImageQueryBuilder()
                     {
                         Page = pixaPage,
-                        PerPage = amount
+                        PerPage = amount,
+                        MinWidth = int.Parse(res[0]), //forgive me
+                        MinHeight = int.Parse(res[1])
                     });
                 }
 
@@ -134,7 +136,9 @@ namespace WinSplash
                     {
                         Query = search,
                         Page = pixaPage,
-                        PerPage = amount
+                        PerPage = amount,
+                        MinWidth = int.Parse(res[0]),
+                        MinHeight = int.Parse(res[1])
                     });
                 }
                 
