@@ -73,6 +73,8 @@ namespace WinSplash
                 ButtonRight.IsEnabled = true;
                 Debug.WriteLine("Enabled buttons");
             }
+
+            ImageGrid.ItemsSource = images;
         }
 
 
@@ -82,8 +84,14 @@ namespace WinSplash
             Spinner.Opacity = 1;
             ButtonLeft.IsEnabled = false;
             ButtonRight.IsEnabled = false;
+
+            /*int ic = images.Count;
+            for(int i=0; i < ic; i++)
+                images.RemoveAt(0);*/
+            //removing items quickly does not animate :(
             images = new ObservableCollection<PixaImage>();
             ImageGrid.ItemsSource = images;
+            
 
             Debug.WriteLine("started downloading" + DateTime.Now);
             //images = await AddImages();
@@ -261,6 +269,11 @@ namespace WinSplash
 
             mainPage.pixaPage = pixaPage;
             GetImages();
+        }
+
+        private void ImageViewLoaded(object sender, RoutedEventArgs e)
+        {
+            ((Image)sender).Opacity = 1;
         }
     }
 }

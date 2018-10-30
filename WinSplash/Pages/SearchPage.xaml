@@ -132,7 +132,11 @@
                 HorizontalAlignment="Center"
                 Margin="0"
                 >
-
+                <GridView.ItemContainerTransitions>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition />
+                    </TransitionCollection>
+                </GridView.ItemContainerTransitions>
                 <GridView.ItemTemplate>
                     <DataTemplate>
                         <Button Click="ImageClick"
@@ -143,19 +147,23 @@
                             Tag="{Binding id}">
                             <StackPanel Margin="-10">
                                 <Image Source="{Binding smallUrl}" 
-                                       Stretch="UniformToFill"
+                                    Stretch="UniformToFill"
                                     Width="300"
                                     Height="300"
-                                    Opacity="0">
-                                    <interactivity:Interaction.Behaviors>
+                                    Opacity="0"
+                                    ImageOpened="ImageViewLoaded">
+                                    
+                                    <animations:Implicit.Animations>
+                                        <animations:OpacityAnimation Duration="0:0:0.5"/>
+                                    </animations:Implicit.Animations>
+                                    <!-- <interactivity:Interaction.Behaviors>
                                         <behaviors:Fade x:Name="FadeBehavior" 
                                             Value="1" 
                                             Duration="500" 
                                             Delay="500"
                                             EasingType="Default"
                                             AutomaticallyStart="True"/>
-                                    </interactivity:Interaction.Behaviors>
-
+                                    </interactivity:Interaction.Behaviors> -->
                                 </Image>
                             </StackPanel>
                             <Button.ContextFlyout>
