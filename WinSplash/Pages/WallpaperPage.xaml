@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel>
+    <StackPanel> <!-- add scrolly thing-->
         <Button 
             x:Name="wpButton"
             Content="Start Service"
@@ -52,10 +52,11 @@
         <Image 
             x:Name="wpImage"
             Width="700"
-               Height="auto"
-               Source="ms-appx:///Assets/Wide310x150Logo.png"
-               HorizontalAlignment="Left"
-               Margin="0,0,0,16">
+            Height="auto"
+            MaxHeight="500"
+            Source="ms-appx:///Assets/Wide310x150Logo.png"
+            HorizontalAlignment="Left"
+            Margin="0,0,0,16">
             <Image.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Save Image" Icon="Save" Click="SaveImage"/>

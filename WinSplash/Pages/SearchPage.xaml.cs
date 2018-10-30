@@ -78,7 +78,8 @@ namespace WinSplash
 
         public async void GetImages()
         {
-            Spinner.IsActive = true;
+            //Spinner.IsActive = true;
+            Spinner.Opacity = 1;
             ButtonLeft.IsEnabled = false;
             ButtonRight.IsEnabled = false;
             images = new ObservableCollection<PixaImage>();
@@ -89,8 +90,9 @@ namespace WinSplash
             await AddImages();
 
             //ImageGrid.ItemsSource = images;
-            Spinner.IsActive = false;
-            if(pixaPage != 1)
+            //Spinner.IsActive = false;
+            Spinner.Opacity = 0;
+            if (pixaPage != 1)
                 ButtonLeft.IsEnabled = true;
             ButtonRight.IsEnabled = true;
         }
@@ -160,7 +162,8 @@ namespace WinSplash
             {
                 images = mainPage.pixaImages;
                 ImageGrid.ItemsSource = images;
-                Spinner.IsActive = false;
+                //Spinner.IsActive = false;
+                Spinner.Opacity = 0;
             }
             else GetImages();
         }

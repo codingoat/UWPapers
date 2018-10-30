@@ -52,7 +52,7 @@ namespace WinSplash.Pages
                     i1.UriSource = new Uri("ms-appx:///Assets/github_white.png", UriKind.Absolute);
                     githubImage.Source = i1;
                     BitmapImage i2 = new BitmapImage();
-                    i2.UriSource = new Uri("ms-appx:///Assets/pixabay_white.png", UriKind.Absolute);
+                    i2.UriSource = new Uri("ms-appx:///Assets/pixabay_square_white.png", UriKind.Absolute);
                     unsplashImage.Source = i2;
                 }
                 

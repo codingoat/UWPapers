@@ -40,14 +40,14 @@
             <HyperlinkButton 
                 NavigateUri="https://github.com/codingoat"
                 Height="64"
-                Margin="0,0,16,0">
+                Margin="0,0,32,0">
                 <Image Source="ms-appx:///Assets/github.png"
                        x:Name="githubImage"/>
             </HyperlinkButton>
             <HyperlinkButton 
                 NavigateUri="https://pixabay.com/en/users/codingoat-3153915/"
                 Height="64">
-                <Image Source="ms-appx:///Assets/pixabay.png"
+                <Image Source="ms-appx:///Assets/pixabay_square.png"
                        x:Name="unsplashImage"/>
             </HyperlinkButton>
         </StackPanel>

@@ -9,7 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     xmlns:datatypes="using:WinSplash.Datatypes"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"  
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors">
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -74,15 +75,19 @@
             Loaded="Refresh" 
             >
             <!-- Loaded="Refresh": Load images on opening app -->
-            
-            <interactivity:Interaction.Behaviors>
+            <animations:Implicit.Animations>
+                <animations:OpacityAnimation Duration="0:0:0.5"/>
+            </animations:Implicit.Animations>
+
+
+            <!-- <interactivity:Interaction.Behaviors>
                 <behaviors:Fade x:Name="FadeBehavior" 
                                             Value="1" 
                                             Duration="300" 
                                             Delay="300"
                                             EasingType="Default"
                                             AutomaticallyStart="True"/>
-            </interactivity:Interaction.Behaviors>
+            </interactivity:Interaction.Behaviors> -->
         </ProgressRing>
 
 
