@@ -192,7 +192,7 @@ namespace WinSplash
         {
             Button btn = sender as Button;
             Image img = VisualTreeHelper.GetChild(btn, 0) as Image;
-            List<Image> flipimgs = new List<Image>();
+            ObservableCollection<Image> flipimgs = new ObservableCollection<Image>();
 
             StackPanel btnstck = (StackPanel)btn.Content;
             Image btnimg = (Image)VisualTreeHelper.GetChild(btnstck, 0);

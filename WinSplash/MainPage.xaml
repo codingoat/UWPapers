@@ -117,7 +117,7 @@
                     AlwaysShowHeader="True"
                     w10version1803:BackRequested="NavView_BackRequested">
             <w10version1803:NavigationView.PaneTitle>
-                UWP Wallpapers
+                Ultra Wallpapers
             </w10version1803:NavigationView.PaneTitle>
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Find" Content="Browse" x:Name="search" Tag="search"/>

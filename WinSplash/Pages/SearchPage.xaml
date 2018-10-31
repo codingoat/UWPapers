@@ -10,7 +10,8 @@
     xmlns:datatypes="using:WinSplash.Datatypes"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"  
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
-    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations">
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
 
     <Grid>
         <Grid.ColumnDefinitions>

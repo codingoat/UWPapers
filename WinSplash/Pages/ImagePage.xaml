@@ -6,17 +6,31 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations">
 
     <Grid>
         <FlipView
             x:Name="flipView" 
-            ItemsSource="{Binding}"
             Loaded="flipView_Loaded"
             Margin="-24, -88, -24, -24">
             <FlipView.Background>
                 <AcrylicBrush BackgroundSource="HostBackdrop" TintColor="#99000000" TintOpacity="1" />
             </FlipView.Background>
+            <FlipView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Image Source="{Binding bigUrl}" 
+                                    Stretch="Uniform"
+                                    Opacity="0"
+                                    ImageOpened="ImageViewLoaded">
+                            <animations:Implicit.Animations>
+                                <animations:OpacityAnimation Duration="0:0:0.5"/>
+                            </animations:Implicit.Animations>
+                        </Image>
+                    </Grid>
+                </DataTemplate>
+            </FlipView.ItemTemplate>
         </FlipView>
 
         <CommandBar 

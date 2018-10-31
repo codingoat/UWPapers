@@ -25,7 +25,7 @@ namespace WinSplash.Pages
         {
             var windowframe = (Frame)Window.Current.Content;
             mainPage = (MainPage)windowframe.Content;
-            flipView.ItemsSource = mainPage.storedImages;
+            flipView.ItemsSource = mainPage.pixaImages;
             flipView.SelectedIndex = index;
             flipView.Focus(FocusState.Programmatic); //TODO: fix focus
         }
@@ -55,6 +55,11 @@ namespace WinSplash.Pages
         private async void SetWallpaper(object sender, RoutedEventArgs e)
         {
             await Utils.SetWallpaper(mainPage.pixaImages[flipView.SelectedIndex].url);
+        }
+
+        private void ImageViewLoaded(object sender, RoutedEventArgs e)
+        {
+            ((Windows.UI.Xaml.Controls.Image)sender).Opacity = 1;
         }
     }
 }

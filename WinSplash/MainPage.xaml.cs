@@ -42,7 +42,7 @@ namespace WinSplash
         public Frame theContentFrame;
 
         public ObservableCollection<PixaImage> pixaImages = new ObservableCollection<PixaImage>();
-        public List<Image> storedImages = new List<Image>();
+        public ObservableCollection<Image> storedImages = new ObservableCollection<Image>();
         public int pixaPage = 1;
 
 
