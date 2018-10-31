@@ -238,8 +238,11 @@ namespace WinSplash
         {
             Utils.CopyUrl(images[selectedImage].url);
             Utils.NotifyImage("Link copied to clipboard", images[selectedImage].smallUrl, 10);
+        }
 
-            //await Windows.System.Launcher.LaunchUriAsync(new Uri(btn.Tag.ToString(), UriKind.Absolute)); //open browser
+        private async void OpenUrl(object sender, RoutedEventArgs e)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri(images[selectedImage].pageUrl, UriKind.Absolute));
         }
 
         private void CopyImage(object sender, RoutedEventArgs e)

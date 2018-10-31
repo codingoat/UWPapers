@@ -207,8 +207,6 @@ namespace WinSplash.Pages
         {
             Utils.CopyUrl((String) roamingSettings.Values["wpTaskUrl"]);
             Utils.NotifyImage("Link copied to clipboard", (String)roamingSettings.Values["wpTaskUrl"], 10);
-            
-            //await Windows.System.Launcher.LaunchUriAsync(new Uri(btn.Tag.ToString(), UriKind.Absolute));
         }
 
         private void CopyImage(object sender, RoutedEventArgs e)
@@ -216,7 +214,6 @@ namespace WinSplash.Pages
             Utils.CopyImage((String)roamingSettings.Values["wpTaskUrl"]);
             Utils.NotifyImage("Image copied to clipboard", (String)roamingSettings.Values["wpTaskUrl"], 10);
         }
-
 
         private async void SaveImage(object sender, RoutedEventArgs e)
         {

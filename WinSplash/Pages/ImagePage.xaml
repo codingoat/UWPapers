@@ -25,16 +25,18 @@
             VerticalAlignment="Bottom"
             Canvas.ZIndex="101"
             Height="40"
-            Width="422"
+            Width="562"
             Margin="0,0,-24,-24"
             OverflowButtonVisibility="Collapsed">
             <CommandBar.Background>
                 <AcrylicBrush TintColor="#66FFFFFF"/>
             </CommandBar.Background>
-            <AppBarButton Icon="Street" Label="Set Wallpaper" Click="SetWallpaper" Height="40"/>
-            <AppBarButton Icon="Link" Label="Copy link" Click="CopyUrl" Height="40"/>
-            <AppBarButton Icon="Copy" Label="Copy image" Click="CopyImage" Height="40"/>
             <AppBarButton Icon="Save" Label="Save" Click="SaveImage" Height="40"/>
+            <AppBarButton Icon="Copy" Label="Copy image" Click="CopyImage" Height="40"/>
+            <AppBarButton Icon="Link" Label="Copy link" Click="CopyUrl" Height="40"/>
+            <AppBarButton Icon="Globe" Label="Open in Browser" Click="OpenUrl" Height="40"/>
+            <AppBarButton Icon="Street" Label="Set Wallpaper" Click="SetWallpaper" Height="40"/>
+            
         </CommandBar>
     </Grid>
 </Page>

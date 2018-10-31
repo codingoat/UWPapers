@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -33,6 +34,11 @@ namespace WinSplash.Pages
         {
             Utils.CopyUrl(mainPage.pixaImages[flipView.SelectedIndex].url);
             Utils.NotifyImage("Link copied to clipboard", mainPage.pixaImages[flipView.SelectedIndex].smallUrl, 10);
+        }
+
+        private async void OpenUrl(object sender, RoutedEventArgs e)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri(mainPage.pixaImages[flipView.SelectedIndex].pageUrl, UriKind.Absolute));
         }
 
         private void CopyImage(object sender, RoutedEventArgs e)

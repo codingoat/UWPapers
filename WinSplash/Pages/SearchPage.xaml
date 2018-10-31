@@ -153,6 +153,7 @@
                                     <MenuFlyoutItem Text="Save Image" Icon="Save" Click="SaveImage"/>
                                     <MenuFlyoutItem Text="Copy Image" Icon="Copy" Click="CopyImage"/>
                                     <MenuFlyoutItem Text="Copy Link" Icon="Link" Click="CopyUrl"/>
+                                    <MenuFlyoutItem Text="Open in Browser" Icon="Globe" Click="OpenUrl"/>
                                     <MenuFlyoutItem Text="Set Wallpaper" Icon="Street" Click="SetWallpaper"/>
                                 </MenuFlyout>
                             </Button.ContextFlyout>

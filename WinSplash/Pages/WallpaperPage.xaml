@@ -45,7 +45,7 @@
 
             </StackPanel>
 
-            <TextBlock Text="Current wallpaper"
+            <TextBlock Text="Last wallpaper"
                 Style="{StaticResource SubheaderTextBlockStyle}"
                 Margin="0,32,0,16"/>
 
