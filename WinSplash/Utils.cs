@@ -38,7 +38,7 @@ namespace WinSplash
 
             FileSavePicker savePicker = new FileSavePicker();
             savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            savePicker.SuggestedFileName = "unsplash " + DateTime.Now.ToString("d") + "_" + DateTime.Now.Second.ToString();
+            savePicker.SuggestedFileName = "wallpaper " + DateTime.Now.ToString("d") + "_" + DateTime.Now.Second.ToString();
             savePicker.FileTypeChoices.Add("Image", new List<string>() { ".jpg" });
 
             StorageFile file = await savePicker.PickSaveFileAsync();

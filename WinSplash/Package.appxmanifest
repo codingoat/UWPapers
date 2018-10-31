@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="32214codingoat.UltraWallpapers" Publisher="CN=7D554DB7-D85D-4A56-A9D9-82C683902B47" Version="1.1.0.0" />
+  <Identity Name="32214codingoat.UltraWallpapers" Publisher="CN=7D554DB7-D85D-4A56-A9D9-82C683902B47" Version="1.1.1.0" />
   <mp:PhoneIdentity PhoneProductId="26408d08-793e-41d9-9451-c7fe4cad18ba" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Ultra Wallpapers</DisplayName>

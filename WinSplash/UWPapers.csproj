@@ -128,7 +128,6 @@
     </AppxManifest>
     <None Include="UWPapers_StoreKey.pfx" />
     <None Include="UWPapers_TemporaryKey.pfx" />
-    <None Include="WinSplash_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BadgeLogo.scale-100.png" />
