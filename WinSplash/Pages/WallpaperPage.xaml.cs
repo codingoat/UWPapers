@@ -12,13 +12,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace WinSplash.Pages
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class WallpaperPage : Page
     {
         ApplicationDataContainer roamingSettings = ApplicationData.Current.RoamingSettings;
@@ -113,7 +108,6 @@ namespace WinSplash.Pages
                 urls.Add(img.ImageURL);
             }
 
-            //roamingSettings.Values["wpTaskUrlList"] = String.Join(";", urls);
             StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("wpTaskUrlList.txt", CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(file, String.Join(";", urls));
         }
@@ -125,14 +119,12 @@ namespace WinSplash.Pages
             string url = (await FileIO.ReadTextAsync(sampleFile)).Split(';')[new Random().Next(200)]; //forgive me
 
             byte[] data;
-            //string filename = DateTime.Now.ToString("d");
             HttpClient httpClient = new HttpClient();
             HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
             string mediaType = response.Content.Headers.ContentType.MediaType.Split('/')[1];
             data = await response.Content.ReadAsByteArrayAsync();
             string filename = "wallpaper." + mediaType;
 
-            //ApplicationData.Current.LocalFolder
             StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteBytesAsync(file, data);
 
@@ -149,16 +141,6 @@ namespace WinSplash.Pages
 
         private async void StartService(object sender, RoutedEventArgs e)
         {
-            /*var exampleTaskName = "WallpaperTask";
-            foreach (var task in BackgroundTaskRegistration.AllTasks)
-            {
-                if (task.Value.Name == exampleTaskName)
-                {
-                    return; //task already registered
-                }
-            }*/
-
-
             if ((bool)roamingSettings.Values["wpTask"])
             {
                 wpButton.Content = "Start Service";
@@ -181,7 +163,6 @@ namespace WinSplash.Pages
 
                 await BackgroundExecutionManager.RequestAccessAsync();
                 var builder = new BackgroundTaskBuilder();
-                //builder.Name = "WallpaperTask " + DateTime.Now.ToString("d");
                 builder.Name = "WallpaperTask";
                 builder.TaskEntryPoint = "WallpaperTaskNeo.Wptask";
                 switch ((int)roamingSettings.Values["wpTaskFreq"])
@@ -203,7 +184,6 @@ namespace WinSplash.Pages
                         break;
                 }
 
-                //builder.SetTrigger(new TimeTrigger(15, true)); //TESTING
                 builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
                 BackgroundTaskRegistration task = builder.Register();
                 task.Completed += new BackgroundTaskCompletedEventHandler(OnCompleted);

@@ -17,13 +17,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace WinSplash.Pages
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class SettingsPage : Page
     {
         ObservableCollection<string> resList = new ObservableCollection<string>();
@@ -54,12 +49,10 @@ namespace WinSplash.Pages
                     BitmapImage i2 = new BitmapImage();
                     i2.UriSource = new Uri("ms-appx:///Assets/pixabay_square_white.png", UriKind.Absolute);
                     unsplashImage.Source = i2;
-                }
-                
+                }     
             }
             else
                 radioLight.IsChecked = true;
-
         }
 
         private void ResChanged(object sender, SelectionChangedEventArgs e)
@@ -67,11 +60,22 @@ namespace WinSplash.Pages
             roamingSettings.Values["res"] = resBox.SelectedValue as string;
         }
 
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        private async void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             RadioButton rb = sender as RadioButton;
-            
-            switch(rb.Tag.ToString())
+
+            if(rb.Tag.ToString() == "light" && (string)roamingSettings.Values["theme"] == "dark" || rb.Tag.ToString() == "dark" && (string)roamingSettings.Values["theme"] == "light")
+            {
+                ContentDialog dialog = new ContentDialog
+                {
+                    Title = "Theme changed",
+                    Content = "Please restart the application to apply theme changes.",
+                    CloseButtonText = "Ok",
+                };
+                ContentDialogResult result = await dialog.ShowAsync();
+            }
+
+            switch (rb.Tag.ToString())
             {
                 case "light":
                     roamingSettings.Values["theme"] = "light";
@@ -79,16 +83,7 @@ namespace WinSplash.Pages
                 case "dark":
                     roamingSettings.Values["theme"] = "dark";
                     break;
-            }
-
-            /*AppRestartFailureReason result =
-            await CoreApplication.RequestRestartAsync("");
-            if (result == AppRestartFailureReason.NotInForeground ||
-                result == AppRestartFailureReason.RestartPending ||
-                result == AppRestartFailureReason.Other)
-            {
-                Debug.WriteLine("RequestRestartAsync failed: {0}", result);
-            }*/
+            }   
         }
     }
 }

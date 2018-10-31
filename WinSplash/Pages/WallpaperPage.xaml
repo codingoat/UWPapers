@@ -8,68 +8,68 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel> <!-- add scrolly thing-->
-        <Button 
-            x:Name="wpButton"
-            Content="Start Service"
-             Click="StartService"/>
+    <ScrollViewer
+        Margin="0 0 -24 -24"
+        Padding="0 0 0 24">
+        <StackPanel>
+            <Button 
+                x:Name="wpButton"
+                Content="Start Service"
+                 Click="StartService"/>
 
-
-
-        <TextBlock Text="Search Term"
-        Style="{StaticResource SubheaderTextBlockStyle}"
-        Margin="0,32,0,16"
-        />
-
-        <StackPanel Orientation="Horizontal">
-            <TextBox                            
-                FontSize="20"
-                x:Name="wpSearchBox" 
-                PlaceholderText="Leave empty for random images" 
-                HorizontalAlignment="Left"
-                TextWrapping="NoWrap"
-                Width="500"
-                TextChanged="wpSearchBox_TextChanged"/>
-            <ComboBox 
-                x:Name="wpFreqBox"
-                Width="auto"
-                Height="39"
-                Grid.Column="1"
-                Margin="16,0,0,0"
-                SelectionChanged="wpFreqBox_SelectionChanged">
-                <ComboBoxItem>Hourly</ComboBoxItem>
-                <ComboBoxItem>Tri-Hourly</ComboBoxItem>
-                <ComboBoxItem>Daily</ComboBoxItem>
-                <ComboBoxItem>Weekly</ComboBoxItem>
-            </ComboBox>
-
-        </StackPanel>
-
-        <TextBlock Text="Current wallpaper"
+            <TextBlock Text="Search Term"
             Style="{StaticResource SubheaderTextBlockStyle}"
             Margin="0,32,0,16"/>
 
-        <Image 
-            x:Name="wpImage"
-            Width="700"
-            Height="auto"
-            MaxHeight="500"
-            Source="ms-appx:///Assets/Wide310x150Logo.png"
-            HorizontalAlignment="Left"
-            Margin="0,0,0,16">
-            <Image.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem Text="Save Image" Icon="Save" Click="SaveImage"/>
-                    <MenuFlyoutItem Text="Copy Image" Icon="Copy" Click="CopyImage"/>
-                    <MenuFlyoutItem Text="Copy Link" Icon="Link" Click="CopyUrl"/>
-                    <MenuFlyoutItem Text="Set Wallpaper" Icon="Street" Click="SetWallpaper"/>
-                </MenuFlyout>
-            </Image.ContextFlyout>
-        </Image>
+            <StackPanel Orientation="Horizontal">
+                <TextBox                            
+                    FontSize="20"
+                    x:Name="wpSearchBox" 
+                    PlaceholderText="Leave empty for random images" 
+                    HorizontalAlignment="Left"
+                    TextWrapping="NoWrap"
+                    Width="500"
+                    TextChanged="wpSearchBox_TextChanged"/>
+                <ComboBox 
+                    x:Name="wpFreqBox"
+                    Width="auto"
+                    Height="39"
+                    Grid.Column="1"
+                    Margin="16,0,0,0"
+                    SelectionChanged="wpFreqBox_SelectionChanged">
+                    <ComboBoxItem>Hourly</ComboBoxItem>
+                    <ComboBoxItem>Tri-Hourly</ComboBoxItem>
+                    <ComboBoxItem>Daily</ComboBoxItem>
+                    <ComboBoxItem>Weekly</ComboBoxItem>
+                </ComboBox>
 
-        <Button Content="Get new wallpaper"
-                Click="GetNewWallpaper"
-                />
+            </StackPanel>
 
-    </StackPanel>
+            <TextBlock Text="Current wallpaper"
+                Style="{StaticResource SubheaderTextBlockStyle}"
+                Margin="0,32,0,16"/>
+
+            <Image 
+                x:Name="wpImage"
+                Width="700"
+                Height="auto"
+                MaxHeight="500"
+                Source="ms-appx:///Assets/Wide310x150Logo.png"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,16">
+                <Image.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Save Image" Icon="Save" Click="SaveImage"/>
+                        <MenuFlyoutItem Text="Copy Image" Icon="Copy" Click="CopyImage"/>
+                        <MenuFlyoutItem Text="Copy Link" Icon="Link" Click="CopyUrl"/>
+                        <MenuFlyoutItem Text="Set Wallpaper" Icon="Street" Click="SetWallpaper"/>
+                    </MenuFlyout>
+                </Image.ContextFlyout>
+            </Image>
+
+            <Button Content="Get new wallpaper"
+                    Click="GetNewWallpaper"/>
+
+        </StackPanel>
+    </ScrollViewer>
 </Page>

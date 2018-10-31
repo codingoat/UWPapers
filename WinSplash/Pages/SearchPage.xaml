@@ -78,16 +78,6 @@
             <animations:Implicit.Animations>
                 <animations:OpacityAnimation Duration="0:0:0.5"/>
             </animations:Implicit.Animations>
-
-
-            <!-- <interactivity:Interaction.Behaviors>
-                <behaviors:Fade x:Name="FadeBehavior" 
-                                            Value="1" 
-                                            Duration="300" 
-                                            Delay="300"
-                                            EasingType="Default"
-                                            AutomaticallyStart="True"/>
-            </interactivity:Interaction.Behaviors> -->
         </ProgressRing>
 
 
@@ -130,13 +120,14 @@
                 CanDragItems="False"
                 SelectionMode="None"
                 HorizontalAlignment="Center"
-                Margin="0"
-                >
+                Margin="0">
+
                 <GridView.ItemContainerTransitions>
                     <TransitionCollection>
                         <AddDeleteThemeTransition />
                     </TransitionCollection>
                 </GridView.ItemContainerTransitions>
+
                 <GridView.ItemTemplate>
                     <DataTemplate>
                         <Button Click="ImageClick"
@@ -152,18 +143,9 @@
                                     Height="300"
                                     Opacity="0"
                                     ImageOpened="ImageViewLoaded">
-                                    
                                     <animations:Implicit.Animations>
                                         <animations:OpacityAnimation Duration="0:0:0.5"/>
                                     </animations:Implicit.Animations>
-                                    <!-- <interactivity:Interaction.Behaviors>
-                                        <behaviors:Fade x:Name="FadeBehavior" 
-                                            Value="1" 
-                                            Duration="500" 
-                                            Delay="500"
-                                            EasingType="Default"
-                                            AutomaticallyStart="True"/>
-                                    </interactivity:Interaction.Behaviors> -->
                                 </Image>
                             </StackPanel>
                             <Button.ContextFlyout>
@@ -174,37 +156,6 @@
                                     <MenuFlyoutItem Text="Set Wallpaper" Icon="Street" Click="SetWallpaper"/>
                                 </MenuFlyout>
                             </Button.ContextFlyout>
-
-                            <!-- <FlyoutBase.AttachedFlyout>
-                                <Flyout Placement="Bottom">
-                                    <ListView
-                                        IsItemClickEnabled="True"
-                                        ItemClick="ImageOptionClick"
-                                        SelectionMode="None">
-                                        <x:String>Save Image</x:String>
-                                        <x:String>Copy Image</x:String>
-                                        <x:String>Copy Link</x:String>
-                                    </ListView>
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate
-                                                x:DataType="datatypes:ImageOption">
-                                                <StackPanel Orientation="Horizontal" Height="24" Grid.Row="1" Tag="{Binding url}">
-                                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="{Binding icon}" Margin="0,0,4,0" FontSize="14" VerticalAlignment="Center"/>
-                                                    <TextBlock Text="{Binding text}" VerticalAlignment="Center"/>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate> -->
-                            <!--<StackPanel>
-                                        <Button Content="Save Image"
-                                                Click="SaveImage"
-                                                Tag="{Binding url}"/>
-                                        <Button Content="Copy link"
-                                                Click="CopyUrl"
-                                                Tag="{Binding url}"
-                                                Margin="0,8,0,0"/>
-                                    </StackPanel>
-                                </Flyout>
-                            </FlyoutBase.AttachedFlyout> -->
                         </Button>
                     </DataTemplate>
                 </GridView.ItemTemplate>
@@ -221,10 +172,7 @@
                 <AcrylicBrush TintColor="#99000000" />
             </FlipView.Background>
         </FlipView>
-
-
-
+    
     </Grid>
-
-
+    
 </Page>

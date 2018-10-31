@@ -19,8 +19,6 @@ namespace WallpaperTaskNeo
         ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
         BackgroundTaskDeferral _deferral; // Note: defined at class scope so that we can mark it complete inside the OnCancel() callback if we choose to support cancellation
 
-        
-
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
             _deferral = taskInstance.GetDeferral();
@@ -36,14 +34,12 @@ namespace WallpaperTaskNeo
             string url = (await FileIO.ReadTextAsync(sampleFile)).Split(';')[new Random().Next(200)]; //forgive me
 
             byte[] data;
-            //string filename = DateTime.Now.ToString("d");
             HttpClient httpClient = new HttpClient();
             HttpResponseMessage response = await httpClient.GetAsync(new Uri(url, UriKind.Absolute));
             string mediaType = response.Content.Headers.ContentType.MediaType.Split('/')[1];
             data = await response.Content.ReadAsByteArrayAsync();
             string filename = "wallpaper." + mediaType;
 
-            //ApplicationData.Current.LocalFolder
             StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteBytesAsync(file, data);
 

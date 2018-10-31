@@ -23,16 +23,17 @@ namespace WinSplash
     public sealed partial class SearchPage : Page
     {
         public ObservableCollection<PixaImage> images = new ObservableCollection<PixaImage>();
+        public int pixaPage;
+
         ObservableCollection<int> imageNum = new ObservableCollection<int>();
         ObservableCollection<ImageOption> imageOptions = new ObservableCollection<ImageOption>();
-        PixabaySharpClient pixabayClient = new PixabaySharpClient("3153915-c1b347f3736d73ef2cd6a0e79");
-
-        MainPage mainPage;
-
-        ApplicationDataContainer roamingSettings = ApplicationData.Current.RoamingSettings;
         string[] res;
         int selectedImage = 0;
-        public int pixaPage;
+
+        PixabaySharpClient pixabayClient = new PixabaySharpClient("3153915-c1b347f3736d73ef2cd6a0e79");
+        MainPage mainPage;
+        ApplicationDataContainer roamingSettings = ApplicationData.Current.RoamingSettings;
+
 
 
         public SearchPage()
@@ -63,8 +64,6 @@ namespace WinSplash
             else
                 Debug.WriteLine("no amount selected");
 
-            //Debug.WriteLine("images count: " + images.Count);
-            //Debug.WriteLine("mainpage images count: " + mainPage.pixaImages.Count);
             pixaPage = mainPage.pixaPage;
             if (mainPage.pixaImages.Count != 0)
             {
@@ -78,27 +77,18 @@ namespace WinSplash
         }
 
 
+
         public async void GetImages()
         {
-            //Spinner.IsActive = true;
             Spinner.Opacity = 1;
             ButtonLeft.IsEnabled = false;
             ButtonRight.IsEnabled = false;
 
-            /*int ic = images.Count;
-            for(int i=0; i < ic; i++)
-                images.RemoveAt(0);*/
-            //removing items quickly does not animate :(
             images = new ObservableCollection<PixaImage>();
             ImageGrid.ItemsSource = images;
             
-
-            Debug.WriteLine("started downloading" + DateTime.Now);
-            //images = await AddImages();
             await AddImages();
 
-            //ImageGrid.ItemsSource = images;
-            //Spinner.IsActive = false;
             Spinner.Opacity = 0;
             if (pixaPage != 1)
                 ButtonLeft.IsEnabled = true;
@@ -107,7 +97,6 @@ namespace WinSplash
 
         async Task<int> AddImages()
         {
-            //ObservableCollection<PixaImage> myImages = new ObservableCollection<PixaImage>();
             int amount;
             string search = SearchBox.Text;
 
@@ -163,6 +152,8 @@ namespace WinSplash
 
         }
 
+
+
         public void Refresh(object sender, RoutedEventArgs e)
         {
             SearchBox.Text = "";
@@ -170,7 +161,6 @@ namespace WinSplash
             {
                 images = mainPage.pixaImages;
                 ImageGrid.ItemsSource = images;
-                //Spinner.IsActive = false;
                 Spinner.Opacity = 0;
             }
             else GetImages();
@@ -181,6 +171,16 @@ namespace WinSplash
             GetImages();
         }
 
+        private void ChangePage(object sender, RoutedEventArgs e)
+        {
+            if ((Button)sender == ButtonLeft)
+                pixaPage--;
+            else
+                pixaPage++;
+
+            mainPage.pixaPage = pixaPage;
+            GetImages();
+        }
 
         private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
@@ -223,11 +223,21 @@ namespace WinSplash
             selectedImage = (int) btn.Tag;
         }
 
+        private void ImageNumBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            roamingSettings.Values["amount"] = ImageNumBox.SelectedIndex;
+        }
+
+        private void ImageViewLoaded(object sender, RoutedEventArgs e)
+        {
+            ((Image)sender).Opacity = 1;
+        }
+
 
         private void CopyUrl(object sender, RoutedEventArgs e)
         {
             Utils.CopyUrl(images[selectedImage].url);
-            Utils.NotifyImage("Link copied to clipboard", images[selectedImage].url, 10);
+            Utils.NotifyImage("Link copied to clipboard", images[selectedImage].smallUrl, 10);
 
             //await Windows.System.Launcher.LaunchUriAsync(new Uri(btn.Tag.ToString(), UriKind.Absolute)); //open browser
         }
@@ -248,32 +258,6 @@ namespace WinSplash
             await Utils.SetWallpaper(images[selectedImage].url);
         }
 
-        private void ImageNumBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            roamingSettings.Values["amount"] = ImageNumBox.SelectedIndex;
-        }
 
-        private async void FadeInImage(object sender, RoutedEventArgs e)
-        {
-            Image imgw = (Image)sender;
-            await imgw.Fade(value: 1, duration: 300, delay: 300, easingType: EasingType.Default).StartAsync();
-            //await Utils.SaveImage(images[selectedImage].url);
-        }
-
-        private void ChangePage(object sender, RoutedEventArgs e)
-        {
-            if ((Button)sender == ButtonLeft)
-                pixaPage--;
-            else
-                pixaPage++;
-
-            mainPage.pixaPage = pixaPage;
-            GetImages();
-        }
-
-        private void ImageViewLoaded(object sender, RoutedEventArgs e)
-        {
-            ((Image)sender).Opacity = 1;
-        }
     }
 }

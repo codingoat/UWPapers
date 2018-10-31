@@ -68,7 +68,7 @@ namespace WinSplash
                     };
                     ContentDialogResult result = await dialog.ShowAsync();
                     if (result == ContentDialogResult.Primary)
-                        SaveImage(url);
+                        await SaveImage(url);
                 }
             }
             else
@@ -82,7 +82,7 @@ namespace WinSplash
                 };
                 ContentDialogResult result = await dialog.ShowAsync();
                 if (result == ContentDialogResult.Primary)
-                    SaveImage(url);
+                    await SaveImage(url);
             }
         }
 
